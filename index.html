@@ -213,6 +213,14 @@
   let lastJaText = '';
   let isBusy = false;
 
+  // Tải trước danh sách giọng đọc ngay khi trang mở, để lần phát âm đầu tiên không bị trễ
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.onvoiceschanged = function () {
+      window.speechSynthesis.getVoices();
+    };
+  }
+
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
@@ -231,19 +239,96 @@
     btnJa.disabled = busy;
   }
 
-  // Gọi MyMemory API để dịch văn bản
-  async function translateText(text, fromLang, toLang) {
+  // Sổ câu quen thuộc trong nhà xưởng - tra ngay lập tức, không cần gọi mạng
+  // Có thể thêm/sửa câu tại đây để dùng nhanh hơn cho các lệnh hay lặp lại
+  const PHRASE_BOOK = {
+    'vi-ja': {
+      'dừng máy': '機械を止めてください',
+      'bật máy': '機械を起動してください',
+      'tắt máy': '機械を止めてください',
+      'kiểm tra an toàn': '安全確認をしてください',
+      'nghỉ giải lao': '休憩してください',
+      'cẩn thận': '気をつけてください',
+      'gọi cấp cứu': '救急車を呼んでください',
+      'có lỗi máy': '機械にエラーがあります',
+      'hết nguyên liệu': '材料がなくなりました',
+      'hoàn thành rồi': '完了しました',
+      'chờ một chút': '少々お待ちください',
+      'cảm ơn': 'ありがとうございます',
+      'xin lỗi': 'すみません'
+    },
+    'ja-vi': {
+      '機械を止めてください': 'dừng máy lại',
+      '機械を起動してください': 'bật máy lên',
+      '安全確認をしてください': 'hãy kiểm tra an toàn',
+      '休憩してください': 'nghỉ giải lao đi',
+      '気をつけてください': 'hãy cẩn thận',
+      '救急車を呼んでください': 'gọi xe cấp cứu',
+      '完了しました': 'đã hoàn thành',
+      '少々お待ちください': 'chờ một chút',
+      'ありがとうございます': 'cảm ơn',
+      'すみません': 'xin lỗi'
+    }
+  };
+
+  function normalizeKey(text) {
+    return text.trim().toLowerCase().replace(/[。.、,！!？?]/g, '');
+  }
+
+  function lookupPhraseBook(text, fromCode, toCode) {
+    const book = PHRASE_BOOK[fromCode + '-' + toCode];
+    if (!book) return null;
+    const key = normalizeKey(text);
+    // So khớp chính xác trước
+    if (book[key]) return book[key];
+    // Nếu không tìm thấy chính xác, thử so khớp không phân biệt hoa/thường với các key gốc
+    for (const k in book) {
+      if (normalizeKey(k) === key) return book[k];
+    }
+    return null;
+  }
+
+  // Dịch bằng Google Translate (endpoint công khai không cần key) - nhanh hơn MyMemory
+  async function translateGoogle(text, fromLang, toLang) {
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' +
+      fromLang + '&tl=' + toLang + '&dt=t&q=' + encodeURIComponent(text);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Google Translate lỗi HTTP ' + res.status);
+    const data = await res.json();
+    // Kết quả trả về dạng mảng lồng nhau, ghép các đoạn dịch lại
+    if (data && data[0]) {
+      return data[0].map(function (chunk) { return chunk[0]; }).join('');
+    }
+    throw new Error('Không đọc được kết quả từ Google Translate');
+  }
+
+  // Dịch dự phòng bằng MyMemory (dùng khi Google Translate bị lỗi/chặn)
+  async function translateMyMemory(text, fromLang, toLang) {
     const url = 'https://api.mymemory.translated.net/get?q=' +
       encodeURIComponent(text) + '&langpair=' + fromLang + '|' + toLang;
     const res = await fetch(url);
-    if (!res.ok) {
-      throw new Error('Lỗi kết nối dịch thuật (HTTP ' + res.status + ')');
-    }
+    if (!res.ok) throw new Error('MyMemory lỗi HTTP ' + res.status);
     const data = await res.json();
     if (data && data.responseData && data.responseData.translatedText) {
       return data.responseData.translatedText;
     }
-    throw new Error('Không nhận được kết quả dịch');
+    throw new Error('Không nhận được kết quả dịch từ MyMemory');
+  }
+
+  // Hàm dịch chính: tra sổ câu quen thuộc trước (tức thì) -> Google Translate (nhanh) -> MyMemory (dự phòng)
+  async function translateText(text, fromLang, toLang) {
+    const fromCode = fromLang; // 'vi' hoặc 'ja'
+    const toCode = toLang;
+
+    const cached = lookupPhraseBook(text, fromCode, toCode);
+    if (cached) return cached;
+
+    try {
+      return await translateGoogle(text, fromCode, toCode);
+    } catch (e) {
+      console.warn('Google Translate thất bại, chuyển sang MyMemory:', e.message);
+      return await translateMyMemory(text, fromCode, toCode);
+    }
   }
 
   // Đọc to văn bản bằng giọng nói của trình duyệt
