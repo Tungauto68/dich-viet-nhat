@@ -5,190 +5,103 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Phiên Dịch Việt - Nhật</title>
 <style>
-  * {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+    margin: 0; padding: 0; height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
-    background: #1a1a1a;
-    color: #fff;
-    overscroll-behavior: none;
+    background: #1a1a1a; color: #fff; overscroll-behavior: none;
   }
-  .app {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding: 12px;
-    gap: 12px;
-  }
-  .header {
-    text-align: center;
-    padding: 6px 0 2px 0;
-  }
-  .header h1 {
-    font-size: 20px;
-    margin: 0;
-    font-weight: 600;
-    color: #eee;
-  }
-  .status {
-    text-align: center;
-    font-size: 15px;
-    min-height: 22px;
-    color: #ffd54f;
-    font-weight: 600;
-    padding: 2px;
-  }
+  .app { display: flex; flex-direction: column; min-height: 100vh; padding: 12px; gap: 12px; }
+  .header { text-align: center; padding: 6px 0 2px 0; }
+  .header h1 { font-size: 20px; margin: 0; font-weight: 600; color: #eee; }
+  .status { text-align: center; font-size: 15px; min-height: 22px; color: #ffd54f; font-weight: 600; padding: 2px; }
 
   .btn {
-    border: none;
-    border-radius: 20px;
-    font-size: 26px;
-    font-weight: 700;
-    padding: 28px 10px;
-    color: #fff;
-    cursor: pointer;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
+    border: none; border-radius: 20px; font-size: 26px; font-weight: 700; padding: 28px 10px;
+    color: #fff; cursor: pointer; width: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 6px;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.35);
-    user-select: none;
-    touch-action: manipulation;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.35); user-select: none; touch-action: manipulation;
   }
-  .btn:active {
-    transform: translateY(3px);
-    box-shadow: 0 1px 0 rgba(0,0,0,0.35);
-  }
-  .btn .flag {
-    font-size: 30px;
-  }
-  .btn .sub {
-    font-size: 14px;
-    font-weight: 400;
-    opacity: 0.9;
-  }
-
-  .btn-vi {
-    background: #1565c0;
-  }
-  .btn-vi.listening {
-    background: #0d47a1;
-    box-shadow: 0 0 0 4px rgba(21,101,192,0.4);
-    animation: pulse 1s infinite;
-  }
-
-  .btn-ja {
-    background: #d84315;
-  }
-  .btn-ja.listening {
-    background: #bf360c;
-    box-shadow: 0 0 0 4px rgba(216,67,21,0.4);
-    animation: pulse 1s infinite;
-  }
-
-  .btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    animation: none !important;
-  }
-
+  .btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.35); }
+  .btn .flag { font-size: 30px; }
+  .btn .sub { font-size: 14px; font-weight: 400; opacity: 0.9; }
+  .btn-vi { background: #1565c0; }
+  .btn-vi.listening { background: #0d47a1; box-shadow: 0 0 0 4px rgba(21,101,192,0.4); animation: pulse 1s infinite; }
+  .btn-ja { background: #d84315; }
+  .btn-ja.listening { background: #bf360c; box-shadow: 0 0 0 4px rgba(216,67,21,0.4); animation: pulse 1s infinite; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; animation: none !important; }
   @keyframes pulse {
     0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
     70% { box-shadow: 0 0 0 14px rgba(255,255,255,0); }
     100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
   }
 
-  .result-box {
-    background: #262626;
-    border-radius: 14px;
-    padding: 14px 16px;
-    min-height: 64px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .result-box .label {
-    font-size: 12px;
-    letter-spacing: 0.5px;
-    color: #999;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  .result-box .text {
-    font-size: 20px;
-    line-height: 1.4;
-    word-break: break-word;
-    min-height: 26px;
-  }
+  .result-box { background: #262626; border-radius: 14px; padding: 14px 16px; min-height: 64px; display: flex; flex-direction: column; gap: 4px; }
+  .result-box .label { font-size: 12px; letter-spacing: 0.5px; color: #999; text-transform: uppercase; font-weight: 700; }
+  .result-box .text { font-size: 20px; line-height: 1.4; word-break: break-word; min-height: 26px; }
   .result-box.vi-box .label { color: #64b5f6; }
   .result-box.ja-box .label { color: #ff8a65; }
 
-  .replay-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 4px;
-  }
-  .replay-btn {
-    flex: 1;
-    background: #3a3a3a;
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    padding: 10px;
-    font-size: 15px;
-    cursor: pointer;
-  }
-  .replay-btn:active {
-    background: #4a4a4a;
-  }
+  .replay-row { display: flex; gap: 10px; margin-top: 4px; }
+  .replay-btn { flex: 1; background: #3a3a3a; border: none; border-radius: 10px; color: #fff; padding: 10px; font-size: 15px; cursor: pointer; }
+  .replay-btn:active { background: #4a4a4a; }
 
-  .footer-note {
-    text-align: center;
-    font-size: 12px;
-    color: #666;
-    padding-bottom: 4px;
+  /* O NHAP CHU TAY - danh cho may khong ho tro mic (iPhone) */
+  .manual-box { display: none; flex-direction: column; gap: 10px; background: #262626; border-radius: 14px; padding: 14px; }
+  .manual-lang-switch { display: flex; gap: 6px; }
+  .manual-lang-btn {
+    flex: 1; border: none; border-radius: 10px; padding: 10px; font-size: 14px; font-weight: 700;
+    background: #333; color: #ccc; cursor: pointer;
   }
+  .manual-lang-btn.active-vi { background: #1565c0; color: #fff; }
+  .manual-lang-btn.active-ja { background: #d84315; color: #fff; }
+  .manual-input {
+    width: 100%; min-height: 70px; border-radius: 10px; border: none; padding: 10px;
+    font-size: 17px; background: #1a1a1a; color: #fff; resize: vertical;
+  }
+  .manual-submit {
+    border: none; border-radius: 10px; padding: 14px; font-size: 16px; font-weight: 700;
+    background: #2e7d32; color: #fff; cursor: pointer;
+  }
+  .manual-submit:active { background: #1b5e20; }
 
-  .hidden { display: none; }
+  .device-note {
+    text-align: center; font-size: 12px; color: #ffb74d; background: #332616;
+    border-radius: 10px; padding: 8px; line-height: 1.5;
+  }
+  .footer-note { text-align: center; font-size: 12px; color: #666; padding-bottom: 4px; }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <div class="header">
-    <h1>🗣️ Phiên Dịch Việt ⇄ Nhật</h1>
-  </div>
+  <div class="header"><h1>🗣️ Phiên Dịch Việt ⇄ Nhật</h1></div>
 
   <div class="status" id="status">Bấm nút để bắt đầu nói</div>
 
+  <div class="device-note" id="iosNote">
+    📱 Trên iPhone, trình duyệt không hỗ trợ nhận giọng nói qua nút bấm — vui lòng dùng ô <b>gõ chữ</b> bên dưới.
+    Nếu không nghe được tiếng đọc, kiểm tra <b>nút gạt chuông/im lặng</b> ở cạnh trái máy và tăng âm lượng.
+  </div>
+
+  <!-- Nut bam-va-noi: chi hien khi thiet bi ho tro -->
   <button class="btn btn-vi" id="btnVi">
-    <span class="flag">🇻🇳</span>
-    <span>NÓI TIẾNG VIỆT</span>
-    <span class="sub">Bấm và nói</span>
+    <span class="flag">🇻🇳</span><span>NÓI TIẾNG VIỆT</span><span class="sub">Bấm và nói</span>
   </button>
 
   <div class="result-box vi-box">
     <div class="label">Tiếng Việt</div>
     <div class="text" id="textVi">—</div>
   </div>
-
   <div class="result-box ja-box">
     <div class="label">日本語 (Tiếng Nhật)</div>
     <div class="text" id="textJa">—</div>
   </div>
 
   <button class="btn btn-ja" id="btnJa">
-    <span class="flag">🇯🇵</span>
-    <span>日本語で話す</span>
-    <span class="sub">押して話してください</span>
+    <span class="flag">🇯🇵</span><span>日本語で話す</span><span class="sub">押して話してください</span>
   </button>
 
   <div class="replay-row">
@@ -196,7 +109,17 @@
     <button class="replay-btn" id="replayJa">🔊 もう一度日本語</button>
   </div>
 
-  <div class="footer-note">Dùng Chrome trên điện thoại/máy tính để có kết quả tốt nhất</div>
+  <!-- O NHAP CHU TAY: hien thi khi may khong ho tro nhan dien giong noi -->
+  <div class="manual-box" id="manualBox">
+    <div class="manual-lang-switch">
+      <button class="manual-lang-btn active-vi" id="manualLangVi">🇻🇳 Gõ Tiếng Việt</button>
+      <button class="manual-lang-btn" id="manualLangJa">🇯🇵 日本語で入力</button>
+    </div>
+    <textarea class="manual-input" id="manualInput" placeholder="Gõ câu cần dịch vào đây..."></textarea>
+    <button class="manual-submit" id="manualSubmit">Dịch &amp; Đọc to</button>
+  </div>
+
+  <div class="footer-note">Dùng Chrome trên Android để có kết quả tốt nhất</div>
 </div>
 
 <script>
@@ -208,155 +131,97 @@
   const textJaEl = document.getElementById('textJa');
   const replayViBtn = document.getElementById('replayVi');
   const replayJaBtn = document.getElementById('replayJa');
+  const iosNote = document.getElementById('iosNote');
+  const manualBox = document.getElementById('manualBox');
+  const manualLangVi = document.getElementById('manualLangVi');
+  const manualLangJa = document.getElementById('manualLangJa');
+  const manualInput = document.getElementById('manualInput');
+  const manualSubmit = document.getElementById('manualSubmit');
 
-  let lastViText = '';
-  let lastJaText = '';
   let isBusy = false;
+  let manualLang = 'vi'; // 'vi' hoac 'ja' - ngon ngu dang go trong o nhap tay
 
-  // Tải trước danh sách giọng đọc ngay khi trang mở, để lần phát âm đầu tiên không bị trễ
+  // Tai truoc danh sach giong doc ngay khi mo trang - giam do tre lan dau
   if ('speechSynthesis' in window) {
     window.speechSynthesis.getVoices();
-    window.speechSynthesis.onvoiceschanged = function () {
-      window.speechSynthesis.getVoices();
-    };
+    window.speechSynthesis.onvoiceschanged = function () { window.speechSynthesis.getVoices(); };
   }
 
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const hasSpeechRecognition = !!SpeechRecognition;
 
-  if (!SpeechRecognition) {
-    statusEl.textContent = 'Trình duyệt không hỗ trợ nhận diện giọng nói. Vui lòng dùng Chrome.';
-    btnVi.disabled = true;
-    btnJa.disabled = true;
+  // Neu may khong ho tro nhan dien giong noi (moi trinh duyet tren iPhone), an nut mic, hien o go tay
+  if (!hasSpeechRecognition) {
+    btnVi.classList.add('hidden');
+    btnJa.classList.add('hidden');
+    manualBox.style.display = 'flex';
+    iosNote.style.display = 'block';
+    setStatus('Gõ chữ vào ô bên dưới để dịch');
+  } else {
+    iosNote.style.display = 'none';
   }
 
-  function setStatus(msg) {
-    statusEl.textContent = msg;
-  }
+  function setStatus(msg) { statusEl.textContent = msg; }
+  function setBusy(busy) { isBusy = busy; btnVi.disabled = busy; btnJa.disabled = busy; manualSubmit.disabled = busy; }
 
-  function setBusy(busy) {
-    isBusy = busy;
-    btnVi.disabled = busy;
-    btnJa.disabled = busy;
-  }
-
-  // Sổ câu quen thuộc trong nhà xưởng - tra ngay lập tức, không cần gọi mạng
-  // Có thể thêm/sửa câu tại đây để dùng nhanh hơn cho các lệnh hay lặp lại
+  // ===== DICH THUAT: so cau nhanh (offline, tuc thi) -> Google Translate (nhanh) -> MyMemory (du phong) =====
   const PHRASE_BOOK = {
-    'vi-ja': {
-      'dừng máy': '機械を止めてください',
-      'bật máy': '機械を起動してください',
-      'tắt máy': '機械を止めてください',
-      'kiểm tra an toàn': '安全確認をしてください',
-      'nghỉ giải lao': '休憩してください',
-      'cẩn thận': '気をつけてください',
-      'gọi cấp cứu': '救急車を呼んでください',
-      'có lỗi máy': '機械にエラーがあります',
-      'hết nguyên liệu': '材料がなくなりました',
-      'hoàn thành rồi': '完了しました',
-      'chờ một chút': '少々お待ちください',
-      'cảm ơn': 'ありがとうございます',
-      'xin lỗi': 'すみません'
-    },
-    'ja-vi': {
-      '機械を止めてください': 'dừng máy lại',
-      '機械を起動してください': 'bật máy lên',
-      '安全確認をしてください': 'hãy kiểm tra an toàn',
-      '休憩してください': 'nghỉ giải lao đi',
-      '気をつけてください': 'hãy cẩn thận',
-      '救急車を呼んでください': 'gọi xe cấp cứu',
-      '完了しました': 'đã hoàn thành',
-      '少々お待ちください': 'chờ một chút',
-      'ありがとうございます': 'cảm ơn',
-      'すみません': 'xin lỗi'
-    }
+    'vi-ja': { 'dừng máy': '機械を止めてください', 'cảm ơn': 'ありがとうございます', 'xin lỗi': 'すみません', 'xin chào': 'こんにちは' },
+    'ja-vi': { '機械を止めてください': 'dừng máy lại', 'ありがとうございます': 'cảm ơn', 'すみません': 'xin lỗi', 'こんにちは': 'xin chào' }
   };
-
-  function normalizeKey(text) {
-    return text.trim().toLowerCase().replace(/[。.、,！!？?]/g, '');
-  }
-
+  function normalizeKey(t) { return t.trim().toLowerCase().replace(/[。.、,！!？?]/g, ''); }
   function lookupPhraseBook(text, fromCode, toCode) {
     const book = PHRASE_BOOK[fromCode + '-' + toCode];
     if (!book) return null;
     const key = normalizeKey(text);
-    // So khớp chính xác trước
     if (book[key]) return book[key];
-    // Nếu không tìm thấy chính xác, thử so khớp không phân biệt hoa/thường với các key gốc
-    for (const k in book) {
-      if (normalizeKey(k) === key) return book[k];
-    }
+    for (const k in book) { if (normalizeKey(k) === key) return book[k]; }
     return null;
   }
-
-  // Dịch bằng Google Translate (endpoint công khai không cần key) - nhanh hơn MyMemory
   async function translateGoogle(text, fromLang, toLang) {
-    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' +
-      fromLang + '&tl=' + toLang + '&dt=t&q=' + encodeURIComponent(text);
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' + fromLang + '&tl=' + toLang + '&dt=t&q=' + encodeURIComponent(text);
     const res = await fetch(url);
     if (!res.ok) throw new Error('Google Translate lỗi HTTP ' + res.status);
     const data = await res.json();
-    // Kết quả trả về dạng mảng lồng nhau, ghép các đoạn dịch lại
-    if (data && data[0]) {
-      return data[0].map(function (chunk) { return chunk[0]; }).join('');
-    }
+    if (data && data[0]) return data[0].map(function (c) { return c[0]; }).join('');
     throw new Error('Không đọc được kết quả từ Google Translate');
   }
-
-  // Dịch dự phòng bằng MyMemory (dùng khi Google Translate bị lỗi/chặn)
   async function translateMyMemory(text, fromLang, toLang) {
-    const url = 'https://api.mymemory.translated.net/get?q=' +
-      encodeURIComponent(text) + '&langpair=' + fromLang + '|' + toLang;
+    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + fromLang + '|' + toLang;
     const res = await fetch(url);
     if (!res.ok) throw new Error('MyMemory lỗi HTTP ' + res.status);
     const data = await res.json();
-    if (data && data.responseData && data.responseData.translatedText) {
-      return data.responseData.translatedText;
-    }
+    if (data && data.responseData && data.responseData.translatedText) return data.responseData.translatedText;
     throw new Error('Không nhận được kết quả dịch từ MyMemory');
   }
-
-  // Hàm dịch chính: tra sổ câu quen thuộc trước (tức thì) -> Google Translate (nhanh) -> MyMemory (dự phòng)
   async function translateText(text, fromLang, toLang) {
-    const fromCode = fromLang; // 'vi' hoặc 'ja'
-    const toCode = toLang;
-
-    const cached = lookupPhraseBook(text, fromCode, toCode);
+    const cached = lookupPhraseBook(text, fromLang, toLang);
     if (cached) return cached;
-
-    try {
-      return await translateGoogle(text, fromCode, toCode);
-    } catch (e) {
-      console.warn('Google Translate thất bại, chuyển sang MyMemory:', e.message);
-      return await translateMyMemory(text, fromCode, toCode);
-    }
+    try { return await translateGoogle(text, fromLang, toLang); }
+    catch (e) { console.warn('Google Translate thất bại, chuyển sang MyMemory:', e.message); return await translateMyMemory(text, fromLang, toLang); }
   }
 
-  // Đọc to văn bản bằng giọng nói của trình duyệt
+  // ===== PHAT AM: ep am luong toi da (100%) de tranh tinh trang "tieng nho" tren mot so may =====
   function speak(text, lang, onEnd) {
-    if (!('speechSynthesis' in window)) {
-      if (onEnd) onEnd();
-      return;
-    }
+    if (!('speechSynthesis' in window)) { if (onEnd) onEnd(); return; }
     window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = lang;
     utter.rate = 0.95;
+    utter.volume = 1.0;   // Ep am luong toi da tren moi thiet bi
+    utter.pitch = 1.0;
     utter.onend = function () { if (onEnd) onEnd(); };
     utter.onerror = function () { if (onEnd) onEnd(); };
     window.speechSynthesis.speak(utter);
   }
 
-  // Tạo 1 phiên nhận diện giọng nói dùng chung
+  // ===== NHAN DIEN GIONG NOI (chi chay tren may co ho tro) =====
   function createRecognizer(lang) {
     const rec = new SpeechRecognition();
-    rec.lang = lang;
-    rec.interimResults = false;
-    rec.maxAlternatives = 1;
-    rec.continuous = false;
+    rec.lang = lang; rec.interimResults = false; rec.maxAlternatives = 1; rec.continuous = false;
     return rec;
   }
 
-  // Luồng xử lý chung: nghe -> nhận văn bản -> dịch -> đọc to
   function startFlow(config) {
     if (isBusy) return;
     setBusy(true);
@@ -365,127 +230,101 @@
     setStatus(config.listeningMsg);
 
     let recognition;
-    try {
-      recognition = createRecognizer(config.sourceLang);
-    } catch (e) {
-      setStatus('Không thể khởi tạo micro: ' + e.message);
-      cleanup();
-      return;
-    }
+    try { recognition = createRecognizer(config.sourceLang); }
+    catch (e) { setStatus('Không thể khởi tạo micro: ' + e.message); cleanup(); return; }
 
     let finished = false;
-
-    function cleanup() {
-      finished = true;
-      config.btn.classList.remove('listening');
-      setBusy(false);
-    }
+    function cleanup() { finished = true; config.btn.classList.remove('listening'); setBusy(false); }
 
     recognition.onresult = async function (event) {
       const spokenText = event.results[0][0].transcript;
       config.sourceTextEl.textContent = spokenText;
       config.targetTextEl.textContent = '...';
       setStatus('Đang dịch...');
-
       try {
         const translated = await translateText(spokenText, config.fromCode, config.toCode);
         config.targetTextEl.textContent = translated;
-        config.saveResult(spokenText, translated);
-
         setStatus('Đang phát âm...');
-        speak(translated, config.targetSpeechLang, function () {
-          setStatus('Bấm nút để bắt đầu nói');
-          cleanup();
-        });
+        speak(translated, config.targetSpeechLang, function () { setStatus('Bấm nút để bắt đầu nói'); cleanup(); });
       } catch (err) {
         config.targetTextEl.textContent = '(Lỗi dịch)';
         setStatus('Lỗi: ' + err.message);
         cleanup();
       }
     };
-
     recognition.onerror = function (event) {
       if (finished) return;
       let msg = 'Lỗi nhận diện giọng nói: ' + event.error;
-      if (event.error === 'no-speech') {
-        msg = 'Không nghe thấy giọng nói. Vui lòng thử lại.';
-      } else if (event.error === 'not-allowed' || event.error === 'permission-denied') {
-        msg = 'Chưa cho phép sử dụng micro. Vui lòng cấp quyền micro cho trang web.';
-      }
-      setStatus(msg);
-      cleanup();
+      if (event.error === 'no-speech') msg = 'Không nghe thấy giọng nói. Vui lòng thử lại.';
+      else if (event.error === 'not-allowed' || event.error === 'permission-denied') msg = 'Chưa cho phép sử dụng micro.';
+      setStatus(msg); cleanup();
     };
-
     recognition.onend = function () {
-      if (!finished && config.sourceTextEl.textContent === '—') {
-        setStatus('Không nghe thấy gì. Bấm để thử lại.');
-        cleanup();
-      }
+      if (!finished && config.sourceTextEl.textContent === '—') { setStatus('Không nghe thấy gì. Bấm để thử lại.'); cleanup(); }
     };
-
-    try {
-      recognition.start();
-    } catch (e) {
-      setStatus('Không thể bắt đầu ghi âm: ' + e.message);
-      cleanup();
-    }
+    try { recognition.start(); }
+    catch (e) { setStatus('Không thể bắt đầu ghi âm: ' + e.message); cleanup(); }
   }
 
-  btnVi.addEventListener('click', function () {
-    startFlow({
-      btn: btnVi,
-      otherBtn: btnJa,
-      sourceLang: 'vi-VN',
-      fromCode: 'vi',
-      toCode: 'ja',
-      targetSpeechLang: 'ja-JP',
-      sourceTextEl: textViEl,
-      targetTextEl: textJaEl,
-      listeningMsg: '🎤 Đang nghe... Hãy nói tiếng Việt',
-      saveResult: function (src, tgt) {
-        lastViText = src;
-        lastJaText = tgt;
-      }
+  if (hasSpeechRecognition) {
+    btnVi.addEventListener('click', function () {
+      startFlow({ btn: btnVi, otherBtn: btnJa, sourceLang: 'vi-VN', fromCode: 'vi', toCode: 'ja', targetSpeechLang: 'ja-JP',
+        sourceTextEl: textViEl, targetTextEl: textJaEl, listeningMsg: '🎤 Đang nghe... Hãy nói tiếng Việt' });
     });
-  });
-
-  btnJa.addEventListener('click', function () {
-    startFlow({
-      btn: btnJa,
-      otherBtn: btnVi,
-      sourceLang: 'ja-JP',
-      fromCode: 'ja',
-      toCode: 'vi',
-      targetSpeechLang: 'vi-VN',
-      sourceTextEl: textJaEl,
-      targetTextEl: textViEl,
-      listeningMsg: '🎤 聞いています... 日本語で話してください',
-      saveResult: function (src, tgt) {
-        lastJaText = src;
-        lastViText = tgt;
-      }
+    btnJa.addEventListener('click', function () {
+      startFlow({ btn: btnJa, otherBtn: btnVi, sourceLang: 'ja-JP', fromCode: 'ja', toCode: 'vi', targetSpeechLang: 'vi-VN',
+        sourceTextEl: textJaEl, targetTextEl: textViEl, listeningMsg: '🎤 聞いています... 日本語で話してください' });
     });
-  });
+  }
 
   replayViBtn.addEventListener('click', function () {
     const text = textViEl.textContent;
-    if (text && text !== '—' && text !== '...') {
-      speak(text, 'vi-VN');
-    }
+    if (text && text !== '—' && text !== '...') speak(text, 'vi-VN');
   });
-
   replayJaBtn.addEventListener('click', function () {
     const text = textJaEl.textContent;
-    if (text && text !== '—' && text !== '...') {
-      speak(text, 'ja-JP');
+    if (text && text !== '—' && text !== '...') speak(text, 'ja-JP');
+  });
+
+  // ===== O NHAP CHU TAY (danh cho iPhone / may khong ho tro mic) =====
+  manualLangVi.addEventListener('click', function () {
+    manualLang = 'vi';
+    manualLangVi.classList.add('active-vi'); manualLangJa.classList.remove('active-ja');
+    manualInput.placeholder = 'Gõ câu tiếng Việt cần dịch...';
+  });
+  manualLangJa.addEventListener('click', function () {
+    manualLang = 'ja';
+    manualLangJa.classList.add('active-ja'); manualLangVi.classList.remove('active-vi');
+    manualInput.placeholder = '日本語の文を入力してください...';
+  });
+
+  manualSubmit.addEventListener('click', async function () {
+    const text = manualInput.value.trim();
+    if (!text) { setStatus('Vui lòng gõ chữ vào ô trước'); return; }
+    setBusy(true);
+    setStatus('Đang dịch...');
+    try {
+      let translated, targetLang, sourceEl, targetEl;
+      if (manualLang === 'vi') {
+        translated = await translateText(text, 'vi', 'ja');
+        targetLang = 'ja-JP'; sourceEl = textViEl; targetEl = textJaEl;
+      } else {
+        translated = await translateText(text, 'ja', 'vi');
+        targetLang = 'vi-VN'; sourceEl = textJaEl; targetEl = textViEl;
+      }
+      sourceEl.textContent = text;
+      targetEl.textContent = translated;
+      setStatus('Đang phát âm...');
+      speak(translated, targetLang, function () { setStatus('Gõ chữ vào ô bên dưới để dịch'); setBusy(false); });
+    } catch (err) {
+      setStatus('Lỗi: ' + err.message);
+      setBusy(false);
     }
   });
 
-  // Một số trình duyệt cần "mở khóa" speechSynthesis bằng thao tác chạm đầu tiên
+  // Mo khoa speechSynthesis bang thao tac cham dau tien (can cho iOS/Safari)
   document.body.addEventListener('touchstart', function unlock() {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.getVoices();
-    }
+    if ('speechSynthesis' in window) window.speechSynthesis.getVoices();
     document.body.removeEventListener('touchstart', unlock);
   }, { once: true });
 
